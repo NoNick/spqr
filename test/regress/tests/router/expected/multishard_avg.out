@@ -1,0 +1,60 @@
+\c spqr-console
+
+		SQPR router admin console
+	Here you can configure your routing rules
+------------------------------------------------
+	You can find documentation here 
+https://github.com/pg-sharding/spqr/tree/master/docs
+
+CREATE SHARDING RULE r1 COLUMN i;
+                          add sharding rule                          
+---------------------------------------------------------------------
+ created sharding rule r1 for table (*) with columns [i, hash: x->x]
+(1 row)
+
+CREATE KEY RANGE kridi1 from 0 to 11 route to sh1;
+         add key range          
+--------------------------------
+ created key range from 0 to 11
+(1 row)
+
+CREATE KEY RANGE kridi2 from 11 to 21 route to sh2;
+          add key range          
+---------------------------------
+ created key range from 11 to 21
+(1 row)
+
+\c regress
+CREATE TABLE tbl(id int, i int);
+NOTICE: send query to shard(s) : sh1,sh2
+INSERT INTO tbl (id, i) VALUES(1, 1);
+NOTICE: send query to shard(s) : sh1
+INSERT INTO tbl (id, i) VALUES(12, 12);
+NOTICE: send query to shard(s) : sh2
+INSERT INTO tbl (id, i) VALUES(13, 12);
+NOTICE: send query to shard(s) : sh2
+select avg(id) from tbl;
+NOTICE: send query to shard(s) : sh1,sh2
+select avg(i) from tbl;
+NOTICE: send query to shard(s) : sh1,sh2
+DROP TABLE tbl;
+NOTICE: send query to shard(s) : sh1,sh2
+\c spqr-console
+
+		SQPR router admin console
+	Here you can configure your routing rules
+------------------------------------------------
+	You can find documentation here 
+https://github.com/pg-sharding/spqr/tree/master/docs
+
+DROP KEY RANGE ALL;
+ drop key range 
+----------------
+(0 rows)
+
+DROP SHARDING RULE ALL;
+    drop sharding rule    
+--------------------------
+ dropped sharding rule r1
+(1 row)
+
