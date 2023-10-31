@@ -12,8 +12,7 @@ INSERT INTO tbl (id, i) VALUES(1, 1);
 INSERT INTO tbl (id, i) VALUES(12, 12);
 INSERT INTO tbl (id, i) VALUES(13, 12);
 
-delete from tbl
-where id in (select id from tbl where i = 12 for update skip locked limit 1) and i = 12 returning *;
+delete from tbl where id in (select id from tbl where i = 12 for update skip locked limit 1) and i = 12 returning *;
 
 DROP TABLE tbl;
 \c spqr-console
