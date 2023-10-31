@@ -11,3 +11,4 @@ test: multishard
 test: error
 test: subquery_update
 test: subquery_delete
+test: cte
